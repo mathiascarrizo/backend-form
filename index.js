@@ -8,19 +8,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createConnection({
+// ✅ Usamos pool de conexiones en lugar de createConnection
+const db = mysql.createPool({
   host: "sql312.infinityfree.com",
   user: "if0_39228198",
   password: process.env.DB_PASSWORD,
   database: "if0_39228198_velluto_consultasformulario",
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error("❌ Error de conexión a la base de datos:", err);
-  } else {
-    console.log("✅ Conectado a MySQL en InfinityFree");
-  }
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 app.get("/", (req, res) => {
